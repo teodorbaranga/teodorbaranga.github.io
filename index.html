@@ -4,6 +4,22 @@
     <title>Home</title>
 </head>
 <body>
-<p><a href="benchmark.html">Benchmark</a></p>
+<h3>Configuration cache benchmarking</h3>
+<p>Below are some results that I got by benchmarking the run time of the <code>mb-networking:compileDebugSources</code> task with configuration cache enabled and then disabled. I selected a specific task instead of building the full app to be able to iterate more quickly over the benchmark parameters.</p>
+<h4>Details:</h4>
+<ul>
+<li>The benchmark was run using <code>gradle-profiler --benchmark --scenario-file gradleprofile.scenarios --measure-config-time</code></li>
+<li>The <code>--measure-config-time</code>parameter is meant to measure the configuration time before running each task</li>
+<li>There are 5 warm-up runs and 10 iterations</li>
+<li>The tooling was set to <code>cli</code> so that the Gradle command line client is used to run the tests as opposed to the Gradle tooling API. This was intended to simulate Android Studio builds.</li>
+<li>Used the <code>--no-build-cache</code> and <code>--rerun-tasks</code> parameters to disable any sort of task caching or avoidance and have the most consistent results across runs</li>
+</ul>
+<h4>Results</h4>
+<ul>
+<li><a href="benchmark-cc.html">With configuration cache enabled</a></li>
+<li><a href="benchmark-nocc.html">With configuration cache disabled</a></li>
+</ul>
+<h4>Analysis</h4>
+<p>The total average time stands out as being quicker when the CC is enabled. The average configuration time is 545ms if CC is enabled and 2.2s if CC is disabled. The total average time, however, is almost 5s quicker when CC is enabled and that doesn't seem to be explained by the shorter configuration time alone so more investigation is needed there. Even though the CC seems to be doing its job, the time saved is not near the &gt;10s seen when configuring the project through Android Studio. The nature of the tasks being run should not have an impact on this number so a discrepancy remains for now between the benchmark results and Android Studio's performance.</p>
 </body>
 </html>
